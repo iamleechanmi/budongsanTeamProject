@@ -29,6 +29,7 @@ CREATE TABLE tblMember (
 	name VARCHAR2(20) NOT NULL, /* 이름 */
 	ssn VARCHAR2(20) NOT NULL, /* 주민등록번호 */
 	phone VARCHAR2(20) NOT NULL, /* 핸드폰번호 */
+	address VARCHAR2(200) NOT NULL /* 주소 */
 	delFlag NUMBER NOT NULL check (delFlag in(0, 1)) /* 탈퇴여부 */
 );
 
@@ -97,8 +98,7 @@ CREATE TABLE tblHouseBasic (
 	completionYeaer DATE NOT NULL, /* 준공년도 */
 	parkingFlag NUMBER NOT NULL CHECK (parkingFlag in (0, 1)), /* 주차가능여부 */
 	elevator NUMBER NOT NULL CHECK (elevator in (0, 1)), /* 엘리베이터 */
-	pet NUMBER NOT NULL CHECK (pet in (0, 1)), /* 반려동물 */
-	marketPrice NUMBER NOT NULL /* 시세 */
+	pet NUMBER NOT NULL CHECK (pet in (0, 1)) /* 반려동물 */
 );
 
 /* 매물건물유형 */
@@ -121,12 +121,6 @@ CREATE TABLE tblHousePrice (
 	monthlyFee NUMBER NOT NULL /* 월관리비 */
 );
 
-/* 매물이미지 */
-CREATE TABLE tblHouseImg (
-	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	url VARCHAR2(2000) NOT NULL /* 이미지주소 */
-);
-
 /* 방기초정보 */
 CREATE TABLE tblRoomBasic (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
@@ -141,8 +135,7 @@ CREATE TABLE tblRoomBasic (
 	completionYeaer DATE NOT NULL, /* 준공년도 */
     parkingFlag NUMBER NOT NULL CHECK (parkingFlag in (0, 1)), /* 주차가능여부 */
 	elevator NUMBER NOT NULL CHECK (elevator in (0, 1)), /* 엘리베이터 */
-	pet NUMBER NOT NULL CHECK (pet in (0, 1)), /* 반려동물 */
-	marketPrice NUMBER NOT NULL /* 시세 */
+	pet NUMBER NOT NULL CHECK (pet in (0, 1)) /* 반려동물 */
 );
 
 /* 방거래유형 */
@@ -165,11 +158,6 @@ CREATE TABLE tblRoomPrice (
 	monthlyFee NUMBER NOT NULL /* 월관리비 */
 );
 
-/* 방이미지 */
-CREATE TABLE tblRoomImg (
-	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	url VARCHAR2(2000) NOT NULL /* 이미지주소 */
-);
 
 /* 희망거래유형 */
 CREATE TABLE tblHopeType (
@@ -396,6 +384,20 @@ CREATE TABLE tblRoomPost (
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1))/* 삭제여부 */
 );
 
+/* 매물이미지 */
+CREATE TABLE tblHouseImg (
+	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
+	url VARCHAR2(2000) NOT NULL /* 이미지주소 */
+	housePostSeq NUMBER NOT NULL REFERENCES tblHousePost(seq)/* 매물게시글번호 */
+);
+
+/* 방이미지 */
+CREATE TABLE tblRoomImg (
+	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
+	url VARCHAR2(2000) NOT NULL /* 이미지주소 */
+    roomPostSeq NUMBER NOT NULL REFERENCES tblRoomPost(seq) /* 방게시글번호 */
+);
+
 --매물추천
 create table tblRecoHouse (
 	seq number primary key,                                         -- 매물추천 번호(PK)
@@ -502,12 +504,6 @@ CREATE TABLE tblFirm (
 3단계
 */
 
-/* 요청서 등록 */
-CREATE TABLE tblEnrollment (
-	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	requestSeq NUMBER NOT NULL REFERENCES tblRequest(seq) /* 고객요청서 번호(FK) */
-);
-
 /* 승인업체목록 */
 CREATE TABLE tblApprovalF (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 업체승인번호 */
@@ -540,9 +536,10 @@ CREATE TABLE tblEstimate1th (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
 	regDate DATE DEFAULT SYSDATE, /* 작성일 */
 	approvalFSeq NUMBER NOT NULL REFERENCES tblApprovalF(seq), /* 업체승인번호(FK) */
+	requestSeq NUMBER NOT NULL REFERENCES tblRequest(seq), /* 고객요청서번호(FK) */
 	estimatedCost NUMBER NOT NULL, /* 예상 비용 */
 	eContent VARCHAR2(2000) NOT NULL, /* 견적서내용 */
-	enrollmentSeq NUMBER NOT NULL REFERENCES tblEnrollment(seq) /* 요청서등록 번호(FK) */
+	adoptFlag NUMBER NOT NULL check (adoptFlag in(0, 1)) /* 채택여부 */
 );
 
 /*
@@ -563,7 +560,7 @@ CREATE TABLE tblChatAsk (
 /* 견적상담 */
 CREATE TABLE tblEstimate (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	chatAskSeq NUMBER NOT NULL REFERENCES tblChatAsk(seq), /* 온라인상담번호 (FK)*/
+	estimate1thSeq NUMBER NOT NULL REFERENCES tblEstimate1th(seq), /* 견적서 번호(FK) */
 	consultationSeq NUMBER NOT NULL REFERENCES tblConsultation(seq), /* 견적상담형태번호 */
 	estimateDay DATE NOT NULL /* 견적상담 일자 */
 );
@@ -574,13 +571,13 @@ CREATE TABLE tblPlan (
 	serviceDate DATE NOT NULL, /* 서비스 제공일 */
 	estimateURL VARCHAR2(2000) NOT NULL, /* 견적서사본(JPG) */
 	progressSeq NUMBER NOT NULL REFERENCES tblProgress(seq), /* 일정진행상태번호(FK) */
-	estimateSeq NUMBER NOT NULL REFERENCES tblEstimate(seq)/* 견적상담번호(FK) */
+	estimate1thSeq NUMBER NOT NULL REFERENCES tblEstimate1th(seq) /* 견적서 번호(FK) */
 );
 
 /* 서비스 완료 */
 CREATE TABLE tblCompletion (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	planSeq NUMBER NOT NULL REFERENCES tblPlan(seq), /* 일정등록번호(FK) */
+	estimate1thSeq NUMBER NOT NULL REFERENCES tblEstimate1th(seq), /* 견적서 번호(FK) */
 	charge NUMBER NOT NULL, /* 금액 */
 	receiptURL VARCHAR2(2000) NOT NULL /* 영수증 사본(JPG) */
 );
@@ -593,8 +590,13 @@ CREATE TABLE tblServiceReview (
 	regDate DATE DEFAULT SYSDATE, /* 작성 일자 */
 	reviewContent VARCHAR2(2000) NOT NULL, /* 후기 내용 */
 	contentURL VARCHAR2(2000) NOT NULL, /* 후기 사진(JPG) */
-	delFlag NUMBER NOT NULL check (delFlag in(0, 1)) /* 삭제 여부 */
+	delFlag NUMBER NOT NULL check (delFlag in(0, 1)), /* 삭제 여부 */
+	memberSeq NUMBER NOT NULL REFERENCES tblMember(seq) /* 회원번호 */
 );
+
+
+
+
 
 
 
