@@ -29,7 +29,7 @@ CREATE TABLE tblMember (
 	name VARCHAR2(20) NOT NULL, /* 이름 */
 	ssn VARCHAR2(20) NOT NULL, /* 주민등록번호 */
 	phone VARCHAR2(20) NOT NULL, /* 핸드폰번호 */
-	address VARCHAR2(200) NOT NULL /* 주소 */
+	address VARCHAR2(200) NOT NULL, /* 주소 */
 	delFlag NUMBER NOT NULL check (delFlag in(0, 1)) /* 탈퇴여부 */
 );
 
@@ -364,7 +364,6 @@ CREATE TABLE tblHousePost (
 	approBrokerSeq NUMBER NOT NULL REFERENCES tblApproBroker(seq), /* 승인중개사번호 */
 	houseInfoSeq NUMBER NOT NULL REFERENCES tblHouseInfo(seq), /* 매물정보번호 */
 	housePriceSeq NUMBER NOT NULL REFERENCES tblHousePrice(seq), /* 매물가격번호 */
-	houseImgSeq NUMBER NOT NULL REFERENCES tblHouseImg(seq), /* 이미지번호 */
 	subject VARCHAR2(200) NOT NULL, /* 제목 */
 	content VARCHAR2(2000) NOT NULL, /* 설명 */
 	regDate DATE DEFAULT SYSDATE NOT NULL, /* 등록일 */
@@ -377,7 +376,6 @@ CREATE TABLE tblRoomPost (
 	memberSeq NUMBER NOT NULL REFERENCES tblMember(seq), /* 회원번호 */
 	roomInfoSeq NUMBER NOT NULL REFERENCES tblRoomInfo(seq), /* 방정보번호 */
 	roomPriceSeq NUMBER NOT NULL REFERENCES tblRoomPrice(seq), /* 방가격번호 */
-	roomImgSeq NUMBER NOT NULL REFERENCES tblRoomImg(seq), /* 이미지번호 */
 	subject VARCHAR2(200) NOT NULL, /* 제목 */
 	detail VARCHAR2(2000) NOT NULL, /* 설명 */
 	regDate DATE DEFAULT SYSDATE NOT NULL, /* 등록일 */
@@ -387,14 +385,14 @@ CREATE TABLE tblRoomPost (
 /* 매물이미지 */
 CREATE TABLE tblHouseImg (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	url VARCHAR2(2000) NOT NULL /* 이미지주소 */
+	url VARCHAR2(2000) NOT NULL, /* 이미지주소 */
 	housePostSeq NUMBER NOT NULL REFERENCES tblHousePost(seq)/* 매물게시글번호 */
 );
 
 /* 방이미지 */
 CREATE TABLE tblRoomImg (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	url VARCHAR2(2000) NOT NULL /* 이미지주소 */
+	url VARCHAR2(2000) NOT NULL, /* 이미지주소 */
     roomPostSeq NUMBER NOT NULL REFERENCES tblRoomPost(seq) /* 방게시글번호 */
 );
 
@@ -593,6 +591,8 @@ CREATE TABLE tblServiceReview (
 	delFlag NUMBER NOT NULL check (delFlag in(0, 1)), /* 삭제 여부 */
 	memberSeq NUMBER NOT NULL REFERENCES tblMember(seq) /* 회원번호 */
 );
+
+
 
 
 
