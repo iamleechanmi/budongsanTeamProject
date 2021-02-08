@@ -95,7 +95,7 @@ CREATE TABLE tblHouseBasic (
 	roomNum NUMBER NOT NULL, /* 방개수 */
 	bathroomNum NUMBER NOT NULL, /* 욕실개수 */
 	direction VARCHAR2(9) NOT NULL, /* 방향 */
-	completionYeaer DATE NOT NULL, /* 준공년도 */
+	completionYear DATE NOT NULL, /* 준공년도 */
 	parkingFlag NUMBER NOT NULL CHECK (parkingFlag in (0, 1)), /* 주차가능여부 */
 	elevator NUMBER NOT NULL CHECK (elevator in (0, 1)), /* 엘리베이터 */
 	pet NUMBER NOT NULL CHECK (pet in (0, 1)) /* 반려동물 */
@@ -132,7 +132,7 @@ CREATE TABLE tblRoomBasic (
 	roomNum NUMBER NOT NULL, /* 방개수 */
 	bathroomNum NUMBER NOT NULL, /* 욕실개수 */
 	direction VARCHAR2(9) NOT NULL, /* 방향 */
-	completionYeaer DATE NOT NULL, /* 준공년도 */
+	completionYear DATE NOT NULL, /* 준공년도 */
     parkingFlag NUMBER NOT NULL CHECK (parkingFlag in (0, 1)), /* 주차가능여부 */
 	elevator NUMBER NOT NULL CHECK (elevator in (0, 1)), /* 엘리베이터 */
 	pet NUMBER NOT NULL CHECK (pet in (0, 1)) /* 반려동물 */
