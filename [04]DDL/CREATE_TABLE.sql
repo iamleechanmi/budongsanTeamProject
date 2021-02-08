@@ -62,7 +62,7 @@ CREATE TABLE tblFree (
 	seq NUMBER PRIMARY KEY, /* 번호 */
 	subject VARCHAR2(100) NOT NULL, /* 제목 */
 	detail VARCHAR2(2000) NOT NULL, /* 내용 */
-	regDate DATE DEFAULT sysdate NULL, /* 작성일 */
+	regDate DATE DEFAULT sysdate NOT NULL, /* 작성일 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1)) /* 삭제여부 */
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE tblInquiry (
 	seq NUMBER PRIMARY KEY, /* 번호 */
 	subject VARCHAR2(100) NOT NULL, /* 제목 */
 	detail VARCHAR2(2000) NOT NULL, /* 내용 */
-	regDate DATE DEFAULT sysdate NULL, /* 작성일 */
+	regDate DATE DEFAULT sysdate NOT NULL, /* 작성일 */
 	openFlag NUMBER NOT NULL CHECK (openFlag in (0, 1)), /* 공개여부 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1)) /* 삭제여부 */
 );
@@ -104,20 +104,20 @@ CREATE TABLE tblHouseBasic (
 /* 매물건물유형 */
 CREATE TABLE tblHouseBuildingType (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	type VARCHAR2(20) NOT NULL /* 유형 */
+	type VARCHAR2(20) NOT NULL CHECK (type in ('아파트', '빌라', '주택', '원룸', '투룸', '오피스텔', '사무실')) /* 유형 */
 );
 
 /* 매물거래유형 */
 CREATE TABLE tblHouseDealType (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	type VARCHAR2(6) NOT NULL /* 유형 */
+	type VARCHAR2(6) NOT NULL CHECK (type in ('매매', '전세', '월세')) /* 유형 */
 );
 
 /* 매물가격 */
 CREATE TABLE tblHousePrice (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
 	price NUMBER NOT NULL, /* 가격(보증금/전세금/매매가) */
-	rent NUMBER DEFAULT 0 NULL, /* 월세 */
+	rent NUMBER DEFAULT 0 NOT NULL, /* 월세 */
 	monthlyFee NUMBER NOT NULL /* 월관리비 */
 );
 
@@ -141,20 +141,20 @@ CREATE TABLE tblRoomBasic (
 /* 방거래유형 */
 CREATE TABLE tblRoomDealType (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	type VARCHAR2(6) NOT NULL /* 유형 */
+	type VARCHAR2(6) NOT NULL CHECK (type in ('매매', '전세', '월세')) /* 유형 */
 );
 
 /* 방건물유형 */
 CREATE TABLE tblRoomBuildingType (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
-	type VARCHAR2(20) NOT NULL /* 유형 */
+	type VARCHAR2(20) NOT NULL CHECK (type in ('아파트', '빌라', '주택', '원룸', '투룸', '오피스텔', '사무실')) /* 유형 */
 );
 
 /* 방가격 */
 CREATE TABLE tblRoomPrice (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
 	price NUMBER NOT NULL, /* 가격(보증금/전세금/매매가) */
-	rent NUMBER DEFAULT 0 NULL, /* 월세 */
+	rent NUMBER DEFAULT 0 NOT NULL, /* 월세 */
 	monthlyFee NUMBER NOT NULL /* 월관리비 */
 );
 
@@ -162,7 +162,7 @@ CREATE TABLE tblRoomPrice (
 /* 희망거래유형 */
 CREATE TABLE tblHopeType (
 	seq NUMBER PRIMARY KEY, /* 번호 */
-	dealType VARCHAR2(100) NOT NULL /* 거래유형 */
+	dealType VARCHAR2(100) NOT NULL CHECK (dealType in ('매매', '전세', '월세')) /* 거래유형 */
 );
 
 /* 가상인테리어가구 */
@@ -179,7 +179,7 @@ CREATE TABLE tblVRInteriorGagu (
 --승인중개사
 create table tblApproBroker (
 	seq number primary key,                              -- 승인 중개사(PK)
-	regDate date default sysdate null,               -- 승인일자          -- ******regDate로 변경
+	regDate date default sysdate not null,               -- 승인일자          -- ******regDate로 변경
 	brokerSeq number not null references tblBroker(seq)  -- 중개사번호(FK)
 );
 
@@ -189,7 +189,7 @@ CREATE TABLE tblNews (
 	subject VARCHAR2(100) NOT NULL, /* 제목 */
 	detail VARCHAR2(2000) NOT NULL, /* 내용 */
 	imageURL VARCHAR2(2000) NOT NULL, /* 이미지경로 */
-	regDate DATE DEFAULT sysdate NULL, /* 작성일자 */
+	regDate DATE DEFAULT sysdate NOT NULL, /* 작성일자 */
     adminSeq NUMBER NOT NULL REFERENCES tblAdmin(seq), /* 관리자번호 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1)) /* 삭제여부 */
 );
@@ -200,7 +200,7 @@ CREATE TABLE tblNotice (
 	subject VARCHAR2(100) NOT NULL, /* 제목 */
 	detail VARCHAR2(2000) NOT NULL, /* 내용 */
 	imageURL VARCHAR2(2000) NOT NULL, /* 이미지경로 */
-	regDate DATE DEFAULT sysdate NULL, /* 작성일자 */
+	regDate DATE DEFAULT sysdate NOT NULL, /* 작성일자 */
     adminSeq NUMBER NOT NULL REFERENCES tblAdmin(seq), /* 관리자번호 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1)) /* 삭제여부 */
 );
@@ -209,7 +209,7 @@ CREATE TABLE tblNotice (
 CREATE TABLE tblFreeComment (
 	seq NUMBER PRIMARY KEY, /* 번호 */
 	detail VARCHAR2(2000) NOT NULL, /* 내용 */
-	regDate DATE DEFAULT sysdate NULL, /* 작성일 */
+	regDate DATE DEFAULT sysdate NOT NULL, /* 작성일 */
 	freeSeq NUMBER NOT NULL REFERENCES tblFree(seq), /* 자유글번호 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1)) /* 삭제여부 */
 );
@@ -218,7 +218,7 @@ CREATE TABLE tblFreeComment (
 CREATE TABLE tblInquiryComment (
 	seq NUMBER PRIMARY KEY, /* 번호 */
 	detail VARCHAR2(2000) NOT NULL, /* 댓글내용 */
-	regDate DATE DEFAULT sysdate NULL, /* 날짜 */
+	regDate DATE DEFAULT sysdate NOT NULL, /* 날짜 */
 	adminSeq NUMBER NOT NULL REFERENCES tblAdmin(seq), /* 관리자번호 */
 	inquirySeq NUMBER NOT NULL REFERENCES tblInquiry(seq), /* 문의글번호 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1)) /* 삭제여부 */
@@ -260,15 +260,14 @@ CREATE TABLE tblRoomInfo (
 CREATE TABLE tblHopePrice (
 	seq NUMBER PRIMARY KEY, /* 번호 */
 	price NUMBER NOT NULL, /* 가격(보증금/전세금/매매가) */
-	rent NUMBER default 0 null, /* 월세 */
+	rent NUMBER, /* 월세 */
 	hopeTypeSeq NUMBER NOT NULL references tblHopeType(seq) /* 희망거래유형번호 */
 );
 
 --1:1 문의 내역
 create table tblChatList (  
 	seq number primary key,                                         --1:1문의내역 변호(PK)
-	regDate date default sysdate null,                          -- 문의일
-	state number not null check(state in(0, 1)),                                          -- 문의상태
+	regDate date default sysdate not null,                          -- 문의일
 	memeberSeq number not null references tblMember(seq),           -- 회원번호
 	approBrokerSeq number not null references tblApproBroker(seq)   -- 승인중개사번호(FK)
 );
@@ -276,7 +275,7 @@ create table tblChatList (
 /* 후기/평점 */
 CREATE TABLE tblBrokerReview (
 	seq NUMBER NOT NULL primary key, /* 번호 */
-	regDate DATE default sysdate NULL, /* 날짜 */
+	regDate DATE default sysdate NOT NULL, /* 날짜 */
 	content VARCHAR2(2000) NOT NULL, /* 후기 내용 */
 	star NUMBER NOT NULL, /* 평점 */
 	imgURL VARCHAR2(2000) NOT NULL, /* 계약서이미지경로 */
@@ -307,7 +306,7 @@ CREATE TABLE tblInquiryMember (
 );
 
 /* 작성한문의_중개사 */
-CREATE TABLE tblInquryBroker (
+CREATE TABLE tblInquiryBroker (
 	seq NUMBER PRIMARY KEY, /* 번호 */
 	InquirySeq NUMBER NOT NULL REFERENCES tblInquiry(seq), /* 문의게시판번호 */
 	approBrokerSeq NUMBER NOT NULL REFERENCES tblApproBroker(seq) /* 승인중개사번호 */
@@ -331,7 +330,7 @@ CREATE TABLE tblCommentBroker (
 CREATE TABLE tblReviewDelete (
 	seq NUMBER PRIMARY KEY, /* 번호 */
 	detail VARCHAR2(2000) NOT NULL, /* 삭제사유 */
-	regDate DATE DEFAULT sysdate NULL, /* 요청일자 */
+	regDate DATE DEFAULT sysdate NOT NULL, /* 요청일자 */
 	reviewSeq NUMBER NOT NULL REFERENCES tblBrokerReview(seq), /* 후기번호 */
 	approBrokerSeq NUMBER NOT NULL REFERENCES tblapproBroker(seq), /* 승인중개사번호 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1)) /* 삭제여부 */
@@ -349,14 +348,15 @@ create table tblChat (
 /* 희망입주글 */
 CREATE TABLE tblHopeWrite (
 	seq NUMBER PRIMARY KEY, /* 번호 */
-	zone VARCHAR2(20) NOT NULL, /* 지역 */
-	area VARCHAR2(20) NOT NULL, /* 면적 */
-	roomAmount VARCHAR2(20) NOT NULL, /* 방개수 */
+	zone VARCHAR2(200) NOT NULL, /* 지역 */
+	area number NOT NULL, /* 면적 */
+	roomAmount number NOT NULL, /* 방개수 */
 	content VARCHAR2(2000) NOT NULL, /* 내용 */
 	memberSeq NUMBER NOT NULL references tblMember(seq), /* 회원번호 */
 	hopePriceSeq NUMBER NOT NULL references tblHopePrice(seq), /* 희망입주가격번호 */
 	delFlag NUMBER NOT NULL check (delFlag in(0, 1)) /* 삭제여부 */
 );
+
 
 /* 매물게시글 */
 CREATE TABLE tblHousePost (
@@ -366,7 +366,7 @@ CREATE TABLE tblHousePost (
 	housePriceSeq NUMBER NOT NULL REFERENCES tblHousePrice(seq), /* 매물가격번호 */
 	subject VARCHAR2(200) NOT NULL, /* 제목 */
 	content VARCHAR2(2000) NOT NULL, /* 설명 */
-	regDate DATE DEFAULT SYSDATE NULL, /* 등록일 */
+	regDate DATE DEFAULT SYSDATE NOT NULL, /* 등록일 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1)) /* 삭제여부 */
 );
 
@@ -378,7 +378,7 @@ CREATE TABLE tblRoomPost (
 	roomPriceSeq NUMBER NOT NULL REFERENCES tblRoomPrice(seq), /* 방가격번호 */
 	subject VARCHAR2(200) NOT NULL, /* 제목 */
 	detail VARCHAR2(2000) NOT NULL, /* 설명 */
-	regDate DATE DEFAULT SYSDATE NULL, /* 등록일 */
+	regDate DATE DEFAULT SYSDATE NOT NULL, /* 등록일 */
 	delFlag NUMBER NOT NULL CHECK (delFlag in (0, 1))/* 삭제여부 */
 );
 
@@ -430,7 +430,7 @@ CREATE TABLE tblFalseReport (
 	housePostSeq NUMBER NOT NULL references tblHousePost(seq), /* 매물게시글번호 */
 	memberSeq NUMBER NOT NULL references tblMember(seq), /* 회원번호 */
 	reportReason VARCHAR2(2000) NOT NULL, /* 신고사유 */
-	regDate DATE default sysdate NULL, /* 등록일 */
+	regDate DATE default sysdate NOT NULL, /* 등록일 */
 	delFlag NUMBER NOT NULL check (delFlag in(0, 1)) /* 삭제여부 */
 );
 
@@ -545,11 +545,19 @@ CREATE TABLE tblEstimate1th (
 */
 
 /* 1:1 온라인 상담 */
+/*
+견적서 번호 1, 2, 3 / 5, 6, 7 에 대한 채팅 상담 내용.
+(위 번호만 1:1 매칭이 이뤄졌다고 가정함.)
+
+ whoFlag: 대화 보낸 사람 구분할 flag 컬럼 추가 ( 1:업체 // 0:회원 )
+
+*/
 CREATE TABLE tblChatAsk (
 	seq NUMBER NOT NULL PRIMARY KEY, /* 번호 */
 	timeSent DATE DEFAULT SYSDATE, /* 내용발송시간 */
 	estimate1thSeq NUMBER NOT NULL REFERENCES tblEstimate1th(seq), /* 견적서 번호(FK) */
-	chatContent VARCHAR2(2000) NOT NULL /* 글 내용 */
+	chatContent VARCHAR2(2000) NOT NULL, /* 글 내용 */
+    whoFlag NUMBER NOT NULL /* 작성자 (1:업체 // 0:회원) */
 );
 
 /*

@@ -24,7 +24,6 @@ CREATE SEQUENCE seqUsageLog;
 CREATE SEQUENCE seqApprovalF;
 CREATE SEQUENCE seqPaymentLog;
 CREATE SEQUENCE seqEstimate1th;
-CREATE SEQUENCE seqEnrollment;
 CREATE SEQUENCE seqService;
 CREATE SEQUENCE seqRequest;
 CREATE SEQUENCE seqChatAsk;
@@ -54,7 +53,7 @@ CREATE SEQUENCE seqReviewDelete;
 CREATE SEQUENCE seqInquiry;
 CREATE SEQUENCE seqInquiryComment;
 CREATE SEQUENCE seqInquiryMember;
-CREATE SEQUENCE seqInquryBroker;
+CREATE SEQUENCE seqInquiryBroker;
 CREATE SEQUENCE seqFree;
 CREATE SEQUENCE seqFreeMember;
 CREATE SEQUENCE seqFreeBroker;
@@ -73,5 +72,7 @@ create sequence seqAdPermit;                --광고 권한
 create sequence seqAdPay;                   --광고 결제
 create sequence seqAdInfo;                  --광고 정보
 create sequence seqPostAd;                  --광고시작
+
+
 
 

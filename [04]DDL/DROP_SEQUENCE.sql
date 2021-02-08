@@ -24,7 +24,6 @@ DROP SEQUENCE seqUsageLog;
 DROP SEQUENCE seqApprovalF;
 DROP SEQUENCE seqPaymentLog;
 DROP SEQUENCE seqEstimate1th;
-DROP SEQUENCE seqEnrollment;
 DROP SEQUENCE seqService;
 DROP SEQUENCE seqRequest;
 DROP SEQUENCE seqChatAsk;
@@ -42,7 +41,7 @@ DROP SEQUENCE seqReviewDelete;
 DROP SEQUENCE seqInquiry;
 DROP SEQUENCE seqInquiryComment;
 DROP SEQUENCE seqInquiryMember;
-DROP SEQUENCE seqInquryBroker;
+DROP SEQUENCE seqInquiryBroker;
 DROP SEQUENCE seqFree;
 DROP SEQUENCE seqFreeMember;
 DROP SEQUENCE seqFreeBroker;
@@ -73,5 +72,7 @@ drop sequence seqAdPermit;                  --광고 권한
 drop sequence seqAdPay;                     --광고 결제
 drop sequence seqAdInfo;                    --광고 정보
 drop sequence seqPostAd;                    --광고시작
+
+
 
 

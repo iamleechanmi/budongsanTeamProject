@@ -64,9 +64,6 @@ drop table tblConsultation cascade constraints purge;
 /* 희망거래유형 */
 drop table tblHopeType cascade constraints purge;
 
-/* 요청서 등록 */
-drop table tblEnrollment cascade constraints purge;
-
 /* 중개사 */
 drop table tblBroker cascade constraints purge;
 
@@ -170,7 +167,7 @@ drop table tblServiceReview cascade constraints purge;
 drop table tblHouseBasic cascade constraints purge;
 
 /* 작성한문의_중개사 */
-drop table tblInquryBroker cascade constraints purge;
+drop table tblInquiryBroker cascade constraints purge;
 
 /* 공지사항 */
 drop table tblNotice cascade constraints purge;
@@ -192,6 +189,8 @@ drop table tblChatList cascade constraints purge;
 
 /* 뉴스 */
 drop table tblNews cascade constraints purge;
+
+
 
 
 
