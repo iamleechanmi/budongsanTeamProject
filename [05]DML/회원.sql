@@ -12,7 +12,8 @@ select email from tblMember where name = '이름' and ssn = '주민등록번호'
 -------------------------------------------------------------------------------
 select pw from tblMember where name = '이름' and ssn = '주민등록번호' and email = '이메일주소';
 -------------------------------------------------------------------------------
--- 자유게시판 총 페이지수 계산하는 함수(청강님 view vwFree를 생성하고 실행해야 한다.)
+-- 자유게시판 총 페이지수 계산하는 함수
+-- 청강님 view vwFree를 생성하고 실행해야 한다.
 -------------------------------------------------------------------------------
 create or replace function fnFreeMaxPage(
     page number -- 현재 페이지수를 받는다.
@@ -35,7 +36,6 @@ begin
 end;
 -------------------------------------------------------------------------------
 -- 자유게시판 글 목록 조회(최대 10개 목록 출력된다. 최신글 순, 페이지수 필요)
--------------------------------------------------------------------------------
 -- 자유게시판 목록에는 [번호, 글제목, 작성자, 작성일]이 출력된다.
 -- 일주일, 한달, 세달 단위로 조회한다.
 -------------------------------------------------------------------------------
@@ -106,17 +106,19 @@ end procCommentMember;
 --    procCommentMember(2, 41, '맞아요 저희 동네도 엄청 올랐더라고요');
 --end;
 -------------------------------------------------------------------------------
--- 문의게시판 총 페이지수 계산하는 함수(회원은 공개된 글만 볼 수 있다. 청강님 view vwInquiry를 생성하고 실행해야 한다.)
+-- 문의게시판 총 페이지수 계산하는 함수(회원은 공개된 글만 볼 수 있다. 회원번호, 페이지수 필요)
+-- 청강님 view vwInquiry를 생성하고 실행해야 한다.
 -------------------------------------------------------------------------------
 create or replace function fnInquiryMaxPage(
+    pseq number, -- 회원번호를 받는다.
     page number -- 현재 페이지수를 받는다.
 ) return number
 is
     vpage number;
     vmaxPage number;
 begin
-    -- 최대 페이지수를 변수에 저장한다.
-    select ceil((select count(seq) from vwInquiry where openFlag = 1) / 10) into vmaxPage from dual;
+    -- 자기가 쓴 문의글과 공개글을 포함하여 최대 페이지수를 변수에 저장한다.
+    select ceil((select count(seq) from vwInquiry where openFlag = 1 or authorSeq = pseq) / 10) into vmaxPage from dual;
     
     -- 최대 페이지수에서 현재 페이지수를 뺀 값을 저장한다.
     select vmaxPage - page into vpage from dual;
@@ -128,10 +130,11 @@ begin
             end;
 end;
 -------------------------------------------------------------------------------
--- 문의게시판 글 목록 조회(최대 10개의 공개된 글 목록을 출력한다. 최신글 순, 페이지수 필요)
+-- 문의게시판 글 목록 조회(최대 10개의 공개된 글과 회원 본인이 쓴 글 목록을 출력한다. 회원번호, 페이지수 필요)
 -- 문의게시판 목록에는 [번호, 글제목, 작성자, 작성일]이 출력된다.
 -------------------------------------------------------------------------------
 create or replace procedure procListInquiry(
+    pmseq number, -- 회원번호
     ppage number, -- 페이지수
     pcursor out sys_refcursor
 )
@@ -142,8 +145,8 @@ begin
                         subject, -- 제목
                         authorName, -- 작성자
                         to_char(regDate, 'yy/mm/dd') as regDate -- 작성일
-                    from (select rownum as rnum, i.* from vwInquiry i where i.openFlag = 1)
-                        where rnum between 10*(fnInquiryMaxPage(ppage)-1)+1 and fnInquiryMaxPage(ppage)*10;
+                    from (select rownum as rnum, i.* from vwInquiry i where i.openFlag = 1 or i.authorSeq = pmseq)
+                        where rnum between 10*(fnInquiryMaxPage(pmseq, ppage)-1)+1 and fnInquiryMaxPage(pmseq, ppage)*10;
 end procListInquiry;
 -------------------------------------------------------------------------------
 -- 문의게시판 글 작성(회원이 작성한다. 회원번호 필요)
