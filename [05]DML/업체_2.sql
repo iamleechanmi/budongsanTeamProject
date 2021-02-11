@@ -47,44 +47,69 @@ from tblFirm f
                                                 
 select * from vwApprovalF;     
 -------------------------------------------------------------------------------
--- 전문 업체 전체 목록 조회(회원이 업체를 조회한다. 최근에 등록된 순)
+-- 승인 업체 목록 조회 시 총 페이지수 계산하는 함수
 -------------------------------------------------------------------------------
-select seq, id, categoryNum, email, address, tel, introduction, portfolio
-from (select af.*, rownum as rnum from vwApprovalF af)
-    where rnum between 10*(페이지수-1)+1 and 페이지수*10;
+create or replace function fnApprovalFMaxPage(
+    page number -- 현재 페이지수를 받는다.
+) return number
+is
+    vpage number;
+    vmaxPage number;
+begin
+    -- 최대 페이지수를 변수에 저장한다.
+    select ceil((select count(seq) from vwApprovalF) / 10) into vmaxPage from dual;
+    
+    -- 최대 페이지수에서 현재 페이지수를 뺀 값을 저장한다.
+    select vmaxPage - page into vpage from dual;
+    
+    return case
+                when vpage <= 0 then vmaxPage -- 마지막 페이지이므로 최대 페이지수를 반환
+                when vpage = vmaxPage then 1 -- 첫 페이지이므로 1을 반환
+                else page -- 현재 페이지수를 반환
+            end;
+end;
+-------------------------------------------------------------------------------
+-- 전문 업체 전체 목록 조회(회원이 업체를 조회한다. 최근에 등록된 순, 페이지수 필요)
+-------------------------------------------------------------------------------
+create or replace procedure procListApprovalF(
+    ppage number, -- 페이지수
+    pcursor out sys_refcursor
+)
+is
+begin
+    open pcursor for select
+                        seq, -- 번호
+                        id, -- 업체명(아이디)
+                        categoryNum, -- 카테고리
+                        address, -- 주소
+                        introduction, -- 소개글
+                        portfolio -- 포트폴리오
+                    from (select rownum as rnum, af.* from vwApprovalF af)
+                        where rnum between 10*(fnApprovalFMaxPage(ppage)-1)+1 and fnApprovalFMaxPage(ppage)*10;
+end procListApprovalF;
+
+--declare
+--    vcursor sys_refcursor;
+--    vseq vwApprovalF.seq%type;
+--    vid vwApprovalF.id%type;
+--    vcn vwApprovalF.categoryNum%type;
+--    va vwApprovalF.address%type;
+--    vi vwApprovalF.introduction%type;
+--    vp vwApprovalF.portfolio%type;
+--begin
+--    procListApprovalF(1, vcursor);
+--    loop
+--        fetch vcursor into vseq, vid, vcn, va, vi, vp;
+--        exit when vcursor%notfound;
+--        DBMS_OUTPUT.PUT_LINE(vseq||' '||vid||' '||vcn||' '||va||' '||vi||' '||vp);
+--        end loop;
+--end;
 -------------------------------------------------------------------------------    
 -- 특정 업체 조회(필요에 따라 where절로 조건을 더 걸어 조회한다.)
 -------------------------------------------------------------------------------
 select seq, id, categoryNum, email, address, tel, introduction, portfolio
 from (select af.*, rownum as rnum from vwApprovalF af where categoryNum like '%카테고리명(시공/청소)%')
     where rnum between 10*(페이지수-1)+1 and 페이지수*10;
--------------------------------------------------------------------------------
--- 업체 견적서 등록 시 포인트 차감 트리거(하루 3번 무료, 이후 등록 시 500포인트 차감)
--------------------------------------------------------------------------------
-create or replace trigger trgUsePoint
-    before
-    insert on tblEstimate1th
-    for each row
-declare
-    vfirmSeq number;
-    vcnt number := 0; -- 오늘 몇번 등록했는지 셀 카운트 변수
-begin
-    select firmSeq into vfirmSeq from tblApprovalF where seq = :new.approvalFSeq;
-    
-    -- 업체 견적서 테이블에서 오늘 몇번 등록했는지 세서 vcnt에 저장
-    select nvl(max(count(approvalFSeq)), 0) into vcnt from tblEstimate1th 
-        where approvalFSeq = :new.approvalFSeq and to_char(regDate, 'yyyymmdd') = to_char(sysdate, 'yyyymmdd') 
-            group by approvalFSeq;
-        
-    -- 3번 이상일 경우 포인트 차감
-    if vcnt >= 3 then
-        -- 포인트 사용 기록 테이블에 추가
-        insert into tblUsageLog values (seqUsageLog.nextVal, default, 500, :new.approvalFSeq);
-    
-        -- 업체 테이블의 보유 포인트 수정
-        update tblFirm set availablePoint = availablePoint - 500 where seq = vfirmSeq;
-    end if;
-end;
 -------------------------------------------------------------------------------
 -- 업체 견적서 작성(업체가 견적서를 작성한다.)
 -------------------------------------------------------------------------------
@@ -104,46 +129,6 @@ exception
     when others then
         rollback;
 end procAddEstimate1th;
--------------------------------------------------------------------------------
--- 포인트 충전
--------------------------------------------------------------------------------
-create or replace procedure procAddPaymentLog(
-    paseq number, -- 승인 업체 번호
-    ppayment number -- 결제액
-)
-is
-begin
-    -- 포인트 결제 기록 테이블에 추가
-    insert into tblPaymentLog 
-        values (seqPaymentLog.nextVal, default, ppayment, paseq);
-    
-    -- 업체 테이블의 보유 포인트 추가
-    update tblFirm set availablePoint = availablePoint + ppayment
-        where seq = (select firmSeq from tblApprovalF where seq = paseq);
-    commit;
-exception
-    when others then
-        rollback;
-end procAddPaymentLog;
--------------------------------------------------------------------------------
--- 포인트 충전 내역 조회(지금은 내역이 적은데 길어질 것을 대비하면 rnum 사용)
--------------------------------------------------------------------------------
-select
-    seq, -- 포인트 결제 기록 번호
-    payment, -- 포인트 결제액
-    paymentDate -- 포인트 결제 일자
-from (select seq, payment || 'p' as payment, paymentDate, approvalFSeq, rownum as rnum 
-        from tblPaymentLog where approvalFSeq = 승인업체번호);
--------------------------------------------------------------------------------
--- 포인트 사용 내역 조회
--------------------------------------------------------------------------------
-select 
-    seq, -- 포인트 사용 기록 번호
-    useAmount, -- 포인트 사용액
-    usageDate -- 포인트 사용 일자
-from (select seq, useAmount, usageDate, approvalFSeq, rownum as rnum 
-        from tblUsageLog where approvalFSeq = 승인업체번호);
---    where rnum between 2 and 5;
 -------------------------------------------------------------------------------    
 -- 특정 업체 견적서 조회(업체가 자기가 보낸 견적서 내역을 확인할 수 있다. 승인업체번호 필요)
 -------------------------------------------------------------------------------
@@ -460,20 +445,3 @@ end procAddEstimate;
 --begin
 --     procAddEstimate(1, '전화', sysdate);
 --end;
--------------------------------------------------------------------------------
--- drop
--------------------------------------------------------------------------------
-drop view vwApprovalF;
-drop trigger trgUsePoint;
-drop procedure procAddEstimate1th;
-drop procedure procAddPaymentLog;
-drop procedure procFindEstimate1th;
-drop procedure procAddRequest;
-drop view vwRequest;
-drop view vwEstimate1th;
-drop procedure procMemberChatAsk;
-drop procedure procFirmChatAsk;
-drop procedure procAddPlan;
-drop procedure procAddCompletion;
-drop procedure procAddServiceReview;
-drop procedure procAddEstimate;
