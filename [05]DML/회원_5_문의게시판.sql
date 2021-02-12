@@ -78,6 +78,24 @@ begin
                     from (select rownum as rnum, i.* from vwInquiry i where i.openFlag = 1 or i.authorSeq = pmseq)
                         where rnum between 10*(fnInquiryMaxPage(pmseq, ppage)-1)+1 and fnInquiryMaxPage(pmseq, ppage)*10;
 end procListInquiry;
+
+
+declare
+    vcursor sys_refcursor;
+    vseq vwInquiry.seq%type;
+    vsubject vwInquiry.subject%type;
+    vauthorName vwInquiry.authorName%type;
+    vregDate varchar2(10);
+begin
+    procListInquiry(1, 1, vcursor);
+    loop
+        fetch vcursor into vseq, vsubject, vauthorName, vregDate;
+        exit when vcursor%notfound;
+        DBMS_OUTPUT.PUT_LINE(vseq||' '||vsubject||' '||vauthorName||' '||vregDate);
+        end loop;
+end;
+
+set serveroutput on;
 -------------------------------------------------------------------------------
 -- 문의게시판 글 작성(회원이 작성한다. 회원번호 필요)
 -------------------------------------------------------------------------------
@@ -103,7 +121,7 @@ exception
 end procAddInquiryMember;
 
 --begin
---    procAddInquiryMember(1, '자유게시판 댓글 관리 안 하나요?', '눈이 찌푸려지는 댓글이 많네요', 0);
+--    procAddInquiryMember(1, '광고가 너무 많습니다', '불편해요', 1);
 --end;
 -------------------------------------------------------------------------------
 -- 문의게시판 글 수정(문의게시판글번호 필요)

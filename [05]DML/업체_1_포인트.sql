@@ -1,6 +1,16 @@
 -- 작성자 : 이찬미
 -- [업체] 포인트 DML
 -------------------------------------------------------------------------------
+-- 업체 보유 포인트 조회(승인업체번호 필요)
+-------------------------------------------------------------------------------
+-- 1. 승인업체번호 사용 시
+select f.availablePoint||'p' as availablePoint
+from tblFirm f inner join tblApprovalF af on f.seq = af.firmSeq
+    where af.seq = 1;
+
+-- 2. 업체번호 사용 시
+select availablePoint||'p' as availablePoint from tblFirm where seq = 업체번호;
+-------------------------------------------------------------------------------
 -- 업체 견적서 등록 시 포인트 차감 트리거(하루 3번 무료, 이후 등록 시 500포인트 차감)
 -------------------------------------------------------------------------------
 create or replace trigger trgUsePoint
@@ -148,13 +158,13 @@ end procListUsageLog;
 --declare
 --    vcursor sys_refcursor;
 --    vseq tblUsageLog.seq%type;
---    va varchar2(20);
---    vd tblUsageLog.usageDate%type;
+--    vuseAmount varchar2(10);
+--    vusageDate tblUsageLog.usageDate%type;
 --begin
 --    procListUsageLog(1, 1, vcursor);
 --    loop
---        fetch vcursor into vseq, va, vd;
+--        fetch vcursor into vseq, vuseAmount, vusageDate;
 --        exit when vcursor%notfound;
---        DBMS_OUTPUT.put_line(vseq||','||va||','||vd);
+--        DBMS_OUTPUT.put_line(vseq||' '||vuseAmount||' '||vusageDate);
 --    end loop;
 --end;
