@@ -1,0 +1,21 @@
+package com.test.sist.inquiry.dto;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+public class InquiryDTO {
+	private String seq;
+	private String subject;
+	private String detail;
+	private String regdate;
+	private String openflag;
+	private String readcount;
+	private String authorseq;
+	private String authorname;
+	private String zerobonem;
+	private String ccount;
+	private int gap;
+
+}

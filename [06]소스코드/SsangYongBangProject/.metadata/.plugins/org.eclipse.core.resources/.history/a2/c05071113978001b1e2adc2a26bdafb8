@@ -1,0 +1,171 @@
+package com.test.sist.member;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.test.sist.DBUtil;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+public class MyPostDAO {
+
+	private Connection conn;
+	private Statement stat;
+	private PreparedStatement pstat;
+	private ResultSet rs;
+	
+	public MyPostDAO() {
+		//DB 연결
+		conn = DBUtil.open();
+	}
+	
+	public void close() {
+		try {
+			conn.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	//TODO 수정 예정 - 페이징 들어가야 한다
+	//MyInfo 서블릿 -> 내가 쓴 글 목록
+	public ArrayList<MyPostDTO> postList(HashMap<String, String> pmap) {
+		
+		try {
+			
+			String sql = "select rnum, seq, authorseq, subject, detail, regdate, readcount, gap, zerobonem, which from ("
+					+ "    select u.*, rownum as rnum from ("
+					+ "        select seq, authorseq, subject, detail, regdate, readcount, gap, zerobonem, '자유게시판' as which from vwFree"
+					+ "        union "
+					+ "        select seq, authorseq, subject, detail, regdate, readcount, gap, zerobonem, '문의게시판' as which from vwInquiry"
+					+ "        where authorseq = ? and zerobonem = 1"
+					+ "        order by regdate desc) u "
+					+ "    where authorseq = ? and zerobonem = 1 "
+					+ "    order by regdate desc)  "
+					+ "where rnum between ? and ?";
+			
+			pstat = conn.prepareStatement(sql);
+			
+			pstat.setString(1, pmap.get("authorseq"));
+			pstat.setString(2, pmap.get("authorseq"));
+			pstat.setString(3, pmap.get("ppage"));
+			String temp = Integer.parseInt(pmap.get("ppage")) * 5 + "";
+			pstat.setString(4, pmap.get("temp"));
+			
+			rs = pstat.executeQuery();
+			
+			ArrayList<MyPostDTO> list = new ArrayList<MyPostDTO>();
+			
+			while (rs.next()) {
+				
+				MyPostDTO dto = new MyPostDTO();
+				
+				dto.setSeq(rs.getString("seq"));
+				dto.setAuthorseq(rs.getString("authorseq"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setDetail(rs.getString("detail"));
+				dto.setRegdate(rs.getString("regdate"));
+				dto.setReadcount(rs.getString("readcount"));
+				dto.setGap(rs.getInt("gap"));
+				dto.setZerobonem(rs.getString("zerobonem"));
+				dto.setWhich(rs.getString("which"));
+				
+				list.add(dto);
+			}
+			
+			return list;
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+	
+	//MyInfo 서블릿 -> 총 페이지수 반환
+	public int ptotalPage(String authorseq) {
+		
+		try {
+			//회원일 경우
+			String sql = "select ceil(("
+					+ "    select count(*) as total from ("
+					+ "        select * from ("
+					+ "        select seq, authorseq, subject, detail, regdate, readcount, gap, zerobonem, '자유게시판' as which from vwFree"
+					+ "        union"
+					+ "        select seq, authorseq, subject, detail, regdate, readcount, gap, zerobonem, '문의게시판' as which from vwInquiry)"
+					+ "        order by regdate desc)"
+					+ "    where authorseq = ? and zerobonem = 1"
+					+ "    ) / 5) as total from dual";
+			
+			pstat = conn.prepareStatement(sql);
+			
+			pstat.setString(1, authorseq);
+			
+			rs = pstat.executeQuery();
+			
+			if (rs.next()) {
+				return rs.getInt("total");
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return 0;
+	}
+
+	//MyInfo 서블릿 -> 총 게시물 수 반환
+	public int totalPost(String authorseq) {
+		
+		try {
+			
+			String sql = "select count(*) as total from ( "
+					+ "    select * from ("
+					+ "    select seq, authorseq, subject, detail, regdate, readcount, gap, zerobonem, '자유게시판' as which from vwFree"
+					+ "    union "
+					+ "    select seq, authorseq, subject, detail, regdate, readcount, gap, zerobonem, '문의게시판' as which from vwInquiry)"
+					+ "    order by regdate desc) "
+					+ "where authorseq = ? and zerobonem = 1";
+			
+			pstat = conn.prepareStatement(sql);
+			pstat.setString(1, authorseq);
+			rs = pstat.executeQuery();
+			
+			if (rs.next()) {
+				return rs.getInt("total");
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return 0;
+	}
+
+	//MyInfo 서블릿 -> 총 댓글 수 반환
+	public int totalComment(String authorseq) {
+		
+		try {
+			
+			String sql = "select count(*) as total from vwFreeComment where authorseq = ? and zerobonem = 1";
+			
+			pstat = conn.prepareStatement(sql);
+			pstat.setString(1, authorseq);
+			rs = pstat.executeQuery();
+			
+			if (rs.next()) {
+				return rs.getInt("total");
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return 0;
+	}
+
+	
+}

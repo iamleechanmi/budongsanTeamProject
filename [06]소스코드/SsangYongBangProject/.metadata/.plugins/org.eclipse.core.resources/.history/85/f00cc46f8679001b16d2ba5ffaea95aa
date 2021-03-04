@@ -1,0 +1,24 @@
+package com.test.sist.broker.house;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/house/view.do")
+public class View extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		//매물 게시글 번호
+		String seq = req.getParameter("seq");
+		String page = req.getParameter("page");
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/house/view.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

@@ -1,0 +1,11 @@
+package com.test.sist.free;
+
+@WebServlet("/free/post.do")
+public class Post extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/free/post.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

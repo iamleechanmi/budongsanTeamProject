@@ -1,0 +1,11 @@
+package com.test.sist.free;
+
+@WebServlet("/free/deleteok.do")
+public class DeleteOk extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/free/deleteok.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

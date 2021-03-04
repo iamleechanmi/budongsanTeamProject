@@ -1,0 +1,47 @@
+package com.test.sist.notice;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.oreilly.servlet.MultipartRequest;
+
+@WebServlet("/notice/postok.do")
+public class PostOk extends HttpServlet {
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		HttpSession session = req.getSession();
+		
+		req.setCharacterEncoding("UTF-8");
+		
+		String adminseq = (String)session.getAttribute("adminSeq");
+		String subject = "";
+		String detail = "";
+		String imageurl = "";
+		String imageurlname = "";
+		
+		try {
+			
+			MultipartRequest multi = new MultipartRequest(
+															req,
+															req.getRealPath("/images"),
+															"UTF-8",
+															new DefaultFileRenamePolicy()
+															);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/notice/postok.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

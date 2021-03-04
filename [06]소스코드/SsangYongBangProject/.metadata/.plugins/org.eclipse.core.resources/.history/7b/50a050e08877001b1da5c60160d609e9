@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!-- jstl -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>스케줄러</title>
+<%@include file="/WEB-INF/views/inc/asset.jsp"%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+
+</head>
+<body>
+
+	<!-- header 가져오기######## -->
+	<%@include file="/WEB-INF/views/inc/header.jsp"%>
+	
+	<div class="myCalContainer">
+		<div class="page-header">
+            <h1><strong>자유게시판 <i class="fas fa-chalkboard-teacher blue"></i>&nbsp;&nbsp;&nbsp;</strong><small>작성 후 등록하기 버튼을 눌러주세요.</small>
+            </h1>
+            <div class="divider"></div>
+        </div> 
+	
+	</div>
+</body>
+</html>

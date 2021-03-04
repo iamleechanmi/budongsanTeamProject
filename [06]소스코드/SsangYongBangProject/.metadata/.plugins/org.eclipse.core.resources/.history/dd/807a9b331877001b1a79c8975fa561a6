@@ -1,0 +1,19 @@
+package com.test.sist.free.dao;
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+public class FreeDTO {
+	
+	private String seq;
+	private String subject;
+	private String detail;
+	private String regdate;
+	private String delflag;
+	private String readcount;
+	private String authorseq;
+	private String authorname;
+	private String ccount;
+	private int gap;
+}

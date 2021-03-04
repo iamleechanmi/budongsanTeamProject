@@ -1,0 +1,66 @@
+package com.test.sist.member;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+@WebServlet("/member/myinfo.do")
+public class MyInfo extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		HashMap<String, String> map = new HashMap<String,String>();
+		
+		HttpSession session = req.getSession();
+		//회원 번호
+		String authorseq = session.getAttribute("seq").toString();
+
+		req.setCharacterEncoding("UTF-8");
+		
+		MyPostDAO dao = new MyPostDAO();
+		
+		//페이징 - 한 페이지에 5개씩 출력할 예정
+		int pnowPage = 0;
+		int ptotalPage = dao.ptotalPage(authorseq);
+				
+		
+		
+		
+		
+		
+		
+		
+		ArrayList<MyPostDTO> plist = dao.postList(authorseq);
+		
+		// 제목, 내용 길이 수정
+		for (MyPostDTO dto : plist) {
+
+			if (dto.getSubject().length() > 30) {
+				dto.setSubject(dto.getSubject().substring(0, 30) + "...");
+			}
+
+			if (dto.getDetail().length() > 100) {
+				dto.setDetail(dto.getDetail().substring(0, 100) + "...");
+			}
+		}
+		
+		req.setAttribute("plist", plist);
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/member/myinfo.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

@@ -1,0 +1,5 @@
+package com.test.sist.news;
+
+public class NewsDAO {
+
+}

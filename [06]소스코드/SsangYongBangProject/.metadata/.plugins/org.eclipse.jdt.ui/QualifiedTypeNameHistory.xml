@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="javax.servlet.Servlet"/>
+    <fullyQualifiedTypeName name="javax.servlet.annotation.WebServlet"/>
+    <fullyQualifiedTypeName name="org.apache.catalina.filters.SetCharacterEncodingFilter"/>
+    <fullyQualifiedTypeName name="com.test.sist.board.FreeCommentDTO"/>
+    <fullyQualifiedTypeName name="com.test.sist.board.InquiryCommentDTO"/>
+    <fullyQualifiedTypeName name="com.test.sist.broker.BrokerDTO"/>
+    <fullyQualifiedTypeName name="javax.print.attribute.HashAttributeSet"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
+    <fullyQualifiedTypeName name="java.sql.Statement"/>
+    <fullyQualifiedTypeName name="java.sql.Connection"/>
+    <fullyQualifiedTypeName name="oracle.jdbc.OracleTypes"/>
+    <fullyQualifiedTypeName name="javax.servlet.RequestDispatcher"/>
+    <fullyQualifiedTypeName name="com.test.sist.board.FreeDAO"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.test.sist.board.InquiryDAO"/>
+    <fullyQualifiedTypeName name="com.test.sist.inquiry.dto.InquiryDTO"/>
+    <fullyQualifiedTypeName name="com.test.sist.inquiry.dao.InquiryDAO"/>
+    <fullyQualifiedTypeName name="com.test.sist.free.dao.FreeCommentDAO"/>
+    <fullyQualifiedTypeName name="com.test.sist.free.dto.FreeCommentDTO"/>
+    <fullyQualifiedTypeName name="java.io.PrintWriter"/>
+    <fullyQualifiedTypeName name="com.test.sist.inquiry.dto.InquiryCommentDTO"/>
+    <fullyQualifiedTypeName name="com.test.sist.inquiry.dao.InquiryCommentDAO"/>
+    <fullyQualifiedTypeName name="com.test.sist.room.RoomDAO"/>
+    <fullyQualifiedTypeName name="com.test.sist.free.dao.FreeDAO"/>
+    <fullyQualifiedTypeName name="com.test.sist.free.dto.FreeDTO"/>
+    <fullyQualifiedTypeName name="com.test.sist.house.dao.HouseDAO"/>
+    <fullyQualifiedTypeName name="com.test.sist.house.dto.HouseDTO"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
+    <fullyQualifiedTypeName name="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"/>
+</qualifiedTypeNameHistroy>

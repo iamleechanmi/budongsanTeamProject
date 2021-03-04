@@ -1,0 +1,5 @@
+package com.test.sist.house.dto;
+
+public class HouseDTO {
+
+}

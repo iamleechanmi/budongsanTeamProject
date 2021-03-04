@@ -1,0 +1,150 @@
+package com.test.sist.broker.house;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.test.sist.house.dao.HouseDAO;
+import com.test.sist.house.dto.HouseDTO;
+import com.test.sist.room.RoomDAO;
+import com.test.sist.room.RoomDTO;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+@WebServlet("/broker/house/registerok.do")
+public class RegisterOk extends HttpServlet {
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		HttpSession session = req.getSession();
+
+		req.setCharacterEncoding("UTF-8");
+		
+		//방 게시글 번호
+		String rseq = req.getParameter("rseq");
+		String subject = req.getParameter("subject");
+		String price = req.getParameter("price");
+		String rent = req.getParameter("rent");
+		String detail = req.getParameter("detail");
+		//승인 중개사 번호
+		String bseq = (String) session.getAttribute("approBrokerSeq");
+		
+		//방 게시글에 대한 정보 가져오기
+		RoomDAO rdao = new RoomDAO();
+		RoomDTO rdto = rdao.getRoom(rseq);
+		
+		HouseDTO dto = new HouseDTO();
+		dto.setBseq(bseq);
+		System.out.println(bseq);
+		
+		dto.setSubject(subject);
+		System.out.println(subject);
+		
+		dto.setPrice(price);
+		System.out.println(price);
+		
+		dto.setRent(rent);
+		System.out.println(rent);
+		
+		dto.setContent(detail);
+		System.out.println(detail);
+		
+		dto.setBtype(rdto.getbType());
+		System.out.println(rdto.getbType());
+		
+		dto.setDtype(rdto.getdType());
+		System.out.println(rdto.getdType());
+		
+		dto.setAddress(rdto.getAddress());
+		System.out.println(rdto.getAddress());
+		
+		dto.setExclusiveArea(rdto.getExclusiveArea());
+		System.out.println(rdto.getExclusiveArea());
+		
+		dto.setSupplyArea(rdto.getSupplyArea());
+		System.out.println(rdto.getSupplyArea());
+		
+		dto.setSelectedFloor(rdto.getSelectedFloor());
+		System.out.println(rdto.getSelectedFloor());
+		
+		dto.setTotalFloor(rdto.getTotalFloor());
+		System.out.println(rdto.getTotalFloor());
+		
+		dto.setRoomNum(rdto.getRoomNum());
+		System.out.println(rdto.getRoomNum());
+		
+		dto.setBathroomNum(rdto.getBathroomNum());
+		System.out.println(rdto.getBathroomNum());
+		
+		dto.setDirection(rdto.getDirection());
+		System.out.println(rdto.getDirection());
+		
+		dto.setCompletionYear(rdto.getCompletionYear());
+		System.out.println(rdto.getCompletionYear());
+		
+		if (rdto.getParkingFlag().equals("가능")) {
+			dto.setParkingFlag("1");
+			System.out.println(dto.getParkingFlag());
+		} else {
+			dto.setParkingFlag("0");
+			System.out.println(dto.getParkingFlag());
+		}
+		
+		if (rdto.getElevator().equals("있음")) {
+			dto.setElevator("1");
+			System.out.println(dto.getElevator());
+		} else {
+			dto.setElevator("0");
+			System.out.println(dto.getElevator());
+		}
+		
+		if (rdto.getPet().equals("가능")) {
+			dto.setPet("1");
+			System.out.println(dto.getPet());
+		} else {
+			dto.setPet("0");
+			System.out.println(dto.getPet());
+		}
+		
+		ArrayList<String> iList= rdao.getImg(rseq);
+		dto.setUrl1(iList.get(0));
+		dto.setUrl2(iList.get(1));
+		
+		HouseDAO dao = new HouseDAO();
+		
+		//매물 게시글 작성하기
+		int result = dao.post(dto);
+		
+		if (result == 1) {
+			
+			//성공 시
+			System.out.println("성공");
+			//resp.sendRedirect("/sybang/broker/house/list.do");
+		} else {
+		
+			//실패 시
+			PrintWriter writer = resp.getWriter();
+			
+			writer.print("<html><body>");
+			writer.print("<script>");
+			writer.print("alert('failed');");
+			writer.print("history.back();");
+			writer.print("</script>");
+			writer.print("</body></html>");
+			
+			writer.close();
+		}
+	}
+}

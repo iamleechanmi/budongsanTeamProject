@@ -1,0 +1,21 @@
+package com.test.sist.free.dto;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+public class FreeCommentDTO {
+
+	private String seq;
+	private String detail;
+	private String regdate;
+	private String frseq;
+	private String delflag;
+	
+	private String authorname;
+	private String authorseq;
+	
+	private String zerobonem; //중개사 0 회원 1
+	private int gap;
+}

@@ -1,0 +1,41 @@
+package com.test.sist.house.dto;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+public class HouseDTO {
+
+	private String seq; //글 번호
+	private String bseq; //승인중개사 번호
+	private String bname; //사업자 상호
+	private String tel; //전화번호
+	private String state; //거래 상태
+	private String btype; //건물 유형
+	private String dtype; //거래 유형
+	private String price; //매물 가격
+	private String rent; //월세
+	private String monthlyFee; //관리비
+	private String address; //주소
+	private int exclusiveArea; //전용면적
+	private int supplyArea; //공급면적
+	private String selectedFloor; //해당 층
+	private String totalFloor; //총 층
+	private int roomNum; //방 개수
+	private int bathroomNum; //욕실 개수
+	private String direction; //방향
+	private String completionYear; //준공년도
+	private String parkingFlag; //주차 여부
+	private String elevator;
+	private String pet; 
+	private String subject;
+	private String content;
+	private String regdate;
+	
+	private String url1;
+	private String url2;
+	
+	
+	
+}

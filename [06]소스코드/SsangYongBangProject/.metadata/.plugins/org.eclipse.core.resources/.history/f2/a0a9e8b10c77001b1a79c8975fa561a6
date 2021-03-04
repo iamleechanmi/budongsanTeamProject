@@ -1,0 +1,29 @@
+package com.test.sist.free;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+@WebServlet("/free/list.do")
+public class List extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/free/list.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

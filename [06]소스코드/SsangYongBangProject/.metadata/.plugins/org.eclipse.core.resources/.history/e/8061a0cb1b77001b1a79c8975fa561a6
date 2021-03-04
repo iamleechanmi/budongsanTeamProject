@@ -1,0 +1,36 @@
+package com.test.sist.free;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/free/detail.do")
+public class Detail extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		HttpSession session = req.getSession();
+		
+		//자유게시판 글 번호
+		String seq = req.getParameter("seq");
+		
+		//자유게시판 검색어
+		String search = req.getParameter("search");
+		
+		//자유게시판 페이지
+		String page = req.getParameter("page");
+		
+		FreeDAO dao = new FreeDAO();
+		
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/free/detail.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

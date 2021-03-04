@@ -1,0 +1,18 @@
+package com.test.sist.inquiry.dto;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+public class InquiryCommentDTO {
+
+	private String seq; // 댓글 번호
+	private String iqrseq; // 문의글 번호
+	private String admseq; // 관리자 번호
+	private String admname; // 관리자 이름
+	private String detail; // 댓글 내용
+	private String regdate; // 작성일
+	
+	private int gap;
+}

@@ -1,0 +1,29 @@
+package com.test.sist.inquiry;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.test.sist.board.InquiryDAO;
+
+@WebServlet("/inquiry/edit.do")
+public class Edit extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String seq = req.getParameter("seq");
+		
+		InquiryDAO dao = new InquiryDAO();
+		InquiryDTO dto = dao.detail(seq);
+		
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/inquiry/edit.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

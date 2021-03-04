@@ -1,0 +1,22 @@
+package com.test.sist.member;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+public class MyInfoDTO {
+
+	private String seq; //글 번호(글 조회일 경우)
+	private String subject; //제목
+	private String detail; //내용
+	private String regdate; //작성일
+	private String readcount; //조회수
+	private String authorseq; //작성자(본인) 번호
+	private String zerobonem; //중개사와의 구분을 위한 식별 번호 0이면 중개사 1이면 회원
+	private int gap; //시간 차
+	private String which; //어느 게시판에서 가져왔는지 - 자유, 문의
+	private String ccount; //댓글 수
+	
+	private String frseq; //글 번호(댓글일 경우)
+}

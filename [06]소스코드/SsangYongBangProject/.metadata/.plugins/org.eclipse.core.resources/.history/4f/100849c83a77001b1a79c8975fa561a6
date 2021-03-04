@@ -1,0 +1,5 @@
+package com.test.sist.inquiry.dao;
+
+public class InquiryCommentDAO {
+
+}

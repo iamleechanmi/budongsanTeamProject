@@ -1,0 +1,39 @@
+package com.test.sist.member;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/member/mypostok.do")
+public class MyPostOk extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		//데이터 받아오기
+		String authorseq = req.getParameter("authorseq");
+		
+		//한글이 들어 있을 경우 처리
+		resp.setCharacterEncoding("UTF-8");
+		
+		MyPostDTO dto = new MyPostDTO();
+		
+		dto.setAuthorseq(authorseq);
+		dto.setZerobonem("1");
+		
+		MyPostDAO dao = new MyPostDAO();
+		//내가 글 쓴 목록 받아오기
+		ArrayList<MyPostDTO> plist = dao.postList(authorseq);
+		
+		dao.close();
+		
+		req.setAttribute("plist", plist);
+	}
+}

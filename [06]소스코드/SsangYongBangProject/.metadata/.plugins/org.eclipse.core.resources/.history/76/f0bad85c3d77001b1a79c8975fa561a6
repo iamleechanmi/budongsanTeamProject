@@ -1,0 +1,63 @@
+package com.test.sist.inquiry;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ * 
+ * @author 이찬미
+ *
+ */
+@WebServlet("/inquiry/list.do")
+public class List extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		// 검색어
+		String search = req.getParameter("search");
+
+		if (!(search == null || search.equals(""))) {
+			map.put("search", search);
+		}
+
+		HttpSession session = req.getSession();
+		
+		String authorseq = "";
+		
+		if ((String)session.getAttribute("approBrokerSeq") != null) {
+			// 중개사일 경우
+			authorseq = (String)session.getAttribute("approBrokerSeq");
+
+		} else if ((String)session.getAttribute("seq") != null) {
+			// 회원일 경우
+			authorseq = (String)session.getAttribute("seq");
+		
+		} else if ((String)session.getAttribute("adminSeq") != null) {
+			// 관리자일 경우
+			authorseq = (String)session.getAttribute("adminSeq");
+		
+		} else {
+			
+		}
+		
+		String access = (String)session.getAttribute("access");
+		
+		System.out.println("access : " + access + "authorseq : " + authorseq);
+			
+		
+
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/inquiry/list.jsp");
+		dispatcher.forward(req, resp);
+	}
+}

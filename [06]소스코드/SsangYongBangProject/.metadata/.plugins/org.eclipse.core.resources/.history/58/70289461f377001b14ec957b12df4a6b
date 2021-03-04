@@ -1,0 +1,10 @@
+package com.test.sist.member;
+
+/**
+ * MyPostDTO. 내가 쓴 글에 대한 정보를 담은 클래스입니다.
+ * @author 이찬미
+ *
+ */
+public class MyPostDTO {
+
+}

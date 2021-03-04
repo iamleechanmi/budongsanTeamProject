@@ -1,0 +1,34 @@
+package com.test.sist.member;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/member/myreviewdata.do")
+public class MyReviewData extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		resp.setCharacterEncoding("UTF-8");
+		resp.setContentType("application/json");
+		
+		PrintWriter writer = resp.getWriter();
+		
+		//회원 번호
+		String mseq = req.getParameter("mseq");
+		
+		MyInfoDAO dao = new MyInfoDAO();
+		
+		ArrayList<MyInfoDTO> rlist = dao.reviewList(mseq);
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/member/myreviewdata.jsp");
+		dispatcher.forward(req, resp);
+	}
+}
